@@ -64,9 +64,7 @@ export default function Navbar() {
 
         <div className="navbar-actions" style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <ThemeToggle />
-          <Link href="/login" className="navbar-cta">
-            Dashboard
-          </Link>
+
         </div>
 
         <button
@@ -101,9 +99,7 @@ export default function Navbar() {
             {l.label}
           </a>
         ))}
-        <Link href="/login" onClick={() => setMenuOpen(false)}>
-          Dashboard
-        </Link>
+
       </div>
     </>
   );

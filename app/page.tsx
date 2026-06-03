@@ -94,7 +94,7 @@ export default function Home() {
 
       // Service cards stagger
       const svcCards = servicesRef.current?.querySelectorAll(".service-card");
-      if (svcCards) {
+      if (svcCards && svcCards.length > 0) {
         gsap.from(svcCards, {
           opacity: 0,
           y: 60,

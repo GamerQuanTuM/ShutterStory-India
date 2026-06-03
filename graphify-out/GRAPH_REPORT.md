@@ -1,16 +1,16 @@
 # Graph Report - shutterstoryindia  (2026-06-03)
 
 ## Corpus Check
-- 32 files · ~204,598 words
+- 32 files · ~204,539 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 129 nodes · 151 edges · 18 communities (13 shown, 5 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 13 edges (avg confidence: 0.88)
+- 133 nodes · 155 edges · 18 communities (13 shown, 5 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 13 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ddbca19e`
+- Built from commit: `6e3c2336`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -66,7 +66,7 @@
 ## Communities (18 total, 5 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.14
+Cohesion: 0.12
 Nodes (11): PLACEHOLDER_IMAGES, Props, MediaContext, MediaContextType, MediaItem, MediaProvider(), MediaStore, useMedia() (+3 more)
 
 ### Community 1 - "Community 1"
@@ -78,7 +78,7 @@ Cohesion: 0.12
 Nodes (6): Home(), SERVICES, FOOTER_LINKS, TESTIMONIALS, PLACEHOLDER_THUMBS, Props
 
 ### Community 3 - "Community 3"
-Cohesion: 0.2
+Cohesion: 0.17
 Nodes (6): geistMono, geistSans, inter, metadata, playfair, ThemeProvider()
 
 ### Community 4 - "Community 4"
@@ -114,7 +114,7 @@ Cohesion: 0.67
 Nodes (3): DATA_FILE, GET(), readStore()
 
 ## Knowledge Gaps
-- **47 isolated node(s):** `eslintConfig`, `nextConfig`, `fs`, `css`, `config` (+42 more)
+- **47 isolated node(s):** `eslintConfig`, `nextConfig`, `config`, `playfair`, `inter` (+42 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -122,15 +122,15 @@ Nodes (3): DATA_FILE, GET(), readStore()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `useMedia()` connect `Community 0` to `Community 2`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `Shutter Story India` (e.g. with `eslint.config.mjs` and `next.config.ts`) actually correct?**
   _`Shutter Story India` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `Next.js Framework` (e.g. with `eslint.config.mjs` and `next.config.ts`) actually correct?**
   _`Next.js Framework` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `eslintConfig`, `nextConfig`, `fs` to the rest of the system?**
+- **What connects `eslintConfig`, `nextConfig`, `config` to the rest of the system?**
   _47 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.14 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**

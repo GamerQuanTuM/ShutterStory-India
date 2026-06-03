@@ -3,8 +3,10 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { MediaProvider } from "./context/MediaContext";
+
 import CustomCursor from "./components/CustomCursor";
 import { ThemeProvider } from "./components/ThemeProvider";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -53,6 +55,7 @@ export default function RootLayout({
               <CustomCursor />
               <div id="scroll-progress" />
               {children}
+              <WhatsAppButton />
             </MediaProvider>
           </AuthProvider>
         </ThemeProvider>

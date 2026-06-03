@@ -107,33 +107,6 @@
       "norm_label": "nextconfig"
     },
     {
-      "label": "patch_css.js",
-      "file_type": "code",
-      "source_file": "patch_css.js",
-      "source_location": "L1",
-      "id": "patch_css_js",
-      "community": 13,
-      "norm_label": "patch_css.js"
-    },
-    {
-      "label": "fs",
-      "file_type": "code",
-      "source_file": "patch_css.js",
-      "source_location": "L1",
-      "id": "shutterstoryindia_patch_css_fs",
-      "community": 13,
-      "norm_label": "fs"
-    },
-    {
-      "label": "css",
-      "file_type": "code",
-      "source_file": "patch_css.js",
-      "source_location": "L2",
-      "id": "shutterstoryindia_patch_css_css",
-      "community": 13,
-      "norm_label": "css"
-    },
-    {
       "label": "postcss.config.mjs",
       "file_type": "code",
       "source_file": "postcss.config.mjs",
@@ -164,7 +137,7 @@
       "label": "playfair",
       "file_type": "code",
       "source_file": "app/layout.tsx",
-      "source_location": "L9",
+      "source_location": "L11",
       "id": "app_layout_playfair",
       "community": 3,
       "norm_label": "playfair"
@@ -173,7 +146,7 @@
       "label": "inter",
       "file_type": "code",
       "source_file": "app/layout.tsx",
-      "source_location": "L16",
+      "source_location": "L18",
       "id": "app_layout_inter",
       "community": 3,
       "norm_label": "inter"
@@ -182,7 +155,7 @@
       "label": "metadata",
       "file_type": "code",
       "source_file": "app/layout.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
       "id": "app_layout_metadata",
       "community": 3,
       "norm_label": "metadata"
@@ -191,7 +164,7 @@
       "label": "RootLayout()",
       "file_type": "code",
       "source_file": "app/layout.tsx",
-      "source_location": "L42",
+      "source_location": "L44",
       "id": "app_layout_rootlayout",
       "community": 3,
       "norm_label": "rootlayout()"
@@ -380,7 +353,7 @@
       "label": "readStore()",
       "file_type": "code",
       "source_file": "app/api/upload/url/route.ts",
-      "source_location": "L10",
+      "source_location": "L12",
       "id": "url_route_readstore",
       "community": 8,
       "norm_label": "readstore()"
@@ -389,7 +362,7 @@
       "label": "writeStore()",
       "file_type": "code",
       "source_file": "app/api/upload/url/route.ts",
-      "source_location": "L18",
+      "source_location": "L20",
       "id": "url_route_writestore",
       "community": 8,
       "norm_label": "writestore()"
@@ -398,7 +371,7 @@
       "label": "POST()",
       "file_type": "code",
       "source_file": "app/api/upload/url/route.ts",
-      "source_location": "L22",
+      "source_location": "L24",
       "id": "url_route_post",
       "community": 8,
       "norm_label": "post()"
@@ -467,19 +440,10 @@
       "norm_label": "bentogallery.tsx"
     },
     {
-      "label": "PLACEHOLDER_IMAGES",
-      "file_type": "code",
-      "source_file": "app/components/BentoGallery.tsx",
-      "source_location": "L12",
-      "id": "components_bentogallery_placeholder_images",
-      "community": 0,
-      "norm_label": "placeholder_images"
-    },
-    {
       "label": "Props",
       "file_type": "code",
       "source_file": "app/components/BentoGallery.tsx",
-      "source_location": "L31",
+      "source_location": "L12",
       "id": "components_bentogallery_props",
       "community": 0,
       "norm_label": "props"
@@ -488,7 +452,7 @@
       "label": "BentoGallery()",
       "file_type": "code",
       "source_file": "app/components/BentoGallery.tsx",
-      "source_location": "L35",
+      "source_location": "L16",
       "id": "components_bentogallery_bentogallery",
       "community": 0,
       "norm_label": "bentogallery()"
@@ -533,7 +497,7 @@
       "label": "Footer()",
       "file_type": "code",
       "source_file": "app/components/Footer.tsx",
-      "source_location": "L24",
+      "source_location": "L23",
       "id": "components_footer_footer",
       "community": 2,
       "norm_label": "footer()"
@@ -674,22 +638,31 @@
       "norm_label": "props"
     },
     {
-      "label": "PLACEHOLDER_THUMBS",
-      "file_type": "code",
-      "source_file": "app/components/VideoGrid.tsx",
-      "source_location": "L16",
-      "id": "components_videogrid_placeholder_thumbs",
-      "community": 2,
-      "norm_label": "placeholder_thumbs"
-    },
-    {
       "label": "VideoGrid()",
       "file_type": "code",
       "source_file": "app/components/VideoGrid.tsx",
-      "source_location": "L35",
+      "source_location": "L16",
       "id": "components_videogrid_videogrid",
       "community": 2,
       "norm_label": "videogrid()"
+    },
+    {
+      "label": "WhatsAppButton.tsx",
+      "file_type": "code",
+      "source_file": "app/components/WhatsAppButton.tsx",
+      "source_location": "L1",
+      "id": "app_components_whatsappbutton_tsx",
+      "community": 3,
+      "norm_label": "whatsappbutton.tsx"
+    },
+    {
+      "label": "WhatsAppButton()",
+      "file_type": "code",
+      "source_file": "app/components/WhatsAppButton.tsx",
+      "source_location": "L3",
+      "id": "components_whatsappbutton_whatsappbutton",
+      "community": 3,
+      "norm_label": "whatsappbutton()"
     },
     {
       "label": "AuthContext.tsx",
@@ -758,7 +731,7 @@
       "label": "MediaStore",
       "file_type": "code",
       "source_file": "app/context/MediaContext.tsx",
-      "source_location": "L20",
+      "source_location": "L19",
       "id": "context_mediacontext_mediastore",
       "community": 0,
       "norm_label": "mediastore"
@@ -767,7 +740,7 @@
       "label": "MediaContextType",
       "file_type": "code",
       "source_file": "app/context/MediaContext.tsx",
-      "source_location": "L25",
+      "source_location": "L24",
       "id": "context_mediacontext_mediacontexttype",
       "community": 0,
       "norm_label": "mediacontexttype"
@@ -776,7 +749,7 @@
       "label": "MediaContext",
       "file_type": "code",
       "source_file": "app/context/MediaContext.tsx",
-      "source_location": "L37",
+      "source_location": "L36",
       "id": "context_mediacontext_mediacontext",
       "community": 0,
       "norm_label": "mediacontext"
@@ -785,7 +758,7 @@
       "label": "MediaProvider()",
       "file_type": "code",
       "source_file": "app/context/MediaContext.tsx",
-      "source_location": "L39",
+      "source_location": "L38",
       "id": "context_mediacontext_mediaprovider",
       "community": 0,
       "norm_label": "mediaprovider()"
@@ -794,7 +767,7 @@
       "label": "useMedia()",
       "file_type": "code",
       "source_file": "app/context/MediaContext.tsx",
-      "source_location": "L149",
+      "source_location": "L143",
       "id": "context_mediacontext_usemedia",
       "community": 0,
       "norm_label": "usemedia()"
@@ -857,7 +830,7 @@
       "label": "Toast()",
       "file_type": "code",
       "source_file": "app/dashboard/images/page.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "id": "images_page_toast",
       "community": 0,
       "norm_label": "toast()"
@@ -866,16 +839,25 @@
       "label": "ConfirmModal()",
       "file_type": "code",
       "source_file": "app/dashboard/images/page.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "id": "images_page_confirmmodal",
       "community": 0,
       "norm_label": "confirmmodal()"
     },
     {
+      "label": "ErrorModal()",
+      "file_type": "code",
+      "source_file": "app/dashboard/images/page.tsx",
+      "source_location": "L52",
+      "id": "images_page_errormodal",
+      "community": 0,
+      "norm_label": "errormodal()"
+    },
+    {
       "label": "ImagesPage()",
       "file_type": "code",
       "source_file": "app/dashboard/images/page.tsx",
-      "source_location": "L51",
+      "source_location": "L66",
       "id": "images_page_imagespage",
       "community": 0,
       "norm_label": "imagespage()"
@@ -893,7 +875,7 @@
       "label": "Toast()",
       "file_type": "code",
       "source_file": "app/dashboard/videos/page.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "id": "videos_page_toast",
       "community": 0,
       "norm_label": "toast()"
@@ -902,16 +884,25 @@
       "label": "ConfirmModal()",
       "file_type": "code",
       "source_file": "app/dashboard/videos/page.tsx",
-      "source_location": "L23",
+      "source_location": "L24",
       "id": "videos_page_confirmmodal",
       "community": 0,
       "norm_label": "confirmmodal()"
     },
     {
+      "label": "ErrorModal()",
+      "file_type": "code",
+      "source_file": "app/dashboard/videos/page.tsx",
+      "source_location": "L52",
+      "id": "videos_page_errormodal",
+      "community": 0,
+      "norm_label": "errormodal()"
+    },
+    {
       "label": "VideosPage()",
       "file_type": "code",
       "source_file": "app/dashboard/videos/page.tsx",
-      "source_location": "L51",
+      "source_location": "L66",
       "id": "videos_page_videospage",
       "community": 0,
       "norm_label": "videospage()"
@@ -940,7 +931,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L1",
       "id": "agents_md",
-      "community": 14,
+      "community": 13,
       "norm_label": "agents.md"
     },
     {
@@ -949,7 +940,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L2",
       "id": "shutterstoryindia_agents_this_is_not_the_next_js_you_know",
-      "community": 14,
+      "community": 13,
       "norm_label": "this is not the next.js you know"
     },
     {
@@ -958,7 +949,7 @@
       "source_file": "AGENTS.md",
       "source_location": "L7",
       "id": "shutterstoryindia_agents_graphify",
-      "community": 14,
+      "community": 13,
       "norm_label": "graphify"
     },
     {
@@ -1023,6 +1014,51 @@
       "id": "shutterstoryindia_readme_deploy_on_vercel",
       "community": 10,
       "norm_label": "deploy on vercel"
+    },
+    {
+      "label": "patch_css.js",
+      "file_type": "code",
+      "source_file": "patch_css.js",
+      "source_location": "L1",
+      "community": 14,
+      "norm_label": "patch_css.js",
+      "id": "patch_css_js"
+    },
+    {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "patch_css.js",
+      "source_location": "L1",
+      "community": 14,
+      "norm_label": "fs",
+      "id": "shutterstoryindia_patch_css_fs"
+    },
+    {
+      "label": "css",
+      "file_type": "code",
+      "source_file": "patch_css.js",
+      "source_location": "L2",
+      "community": 14,
+      "norm_label": "css",
+      "id": "shutterstoryindia_patch_css_css"
+    },
+    {
+      "label": "PLACEHOLDER_IMAGES",
+      "file_type": "code",
+      "source_file": "app/components/BentoGallery.tsx",
+      "source_location": "L12",
+      "community": 0,
+      "norm_label": "placeholder_images",
+      "id": "components_bentogallery_placeholder_images"
+    },
+    {
+      "label": "PLACEHOLDER_THUMBS",
+      "file_type": "code",
+      "source_file": "app/components/VideoGrid.tsx",
+      "source_location": "L16",
+      "community": 2,
+      "norm_label": "placeholder_thumbs",
+      "id": "components_videogrid_placeholder_thumbs"
     },
     {
       "label": "geistSans",
@@ -1367,26 +1403,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "patch_css.js",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "patch_css_js",
-      "target": "shutterstoryindia_patch_css_fs"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "patch_css.js",
-      "source_location": "L2",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "patch_css_js",
-      "target": "shutterstoryindia_patch_css_css"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "postcss.config.mjs",
       "source_location": "L1",
       "weight": 1.0,
@@ -1490,6 +1506,17 @@
       "confidence_score": 1.0,
       "source": "app_layout_tsx",
       "target": "components_themeprovider_themeprovider"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_components_whatsappbutton_tsx"
     },
     {
       "relation": "contains",
@@ -1862,9 +1889,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_api_upload_url_route_ts",
-      "target": "url_route_data_file",
-      "confidence_score": 1.0
+      "target": "url_route_data_file"
     },
     {
       "relation": "contains",
@@ -1872,9 +1899,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_api_upload_url_route_ts",
-      "target": "url_route_readstore",
-      "confidence_score": 1.0
+      "target": "url_route_readstore"
     },
     {
       "relation": "contains",
@@ -1882,9 +1909,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_api_upload_url_route_ts",
-      "target": "url_route_writestore",
-      "confidence_score": 1.0
+      "target": "url_route_writestore"
     },
     {
       "relation": "contains",
@@ -1892,9 +1919,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "app_api_upload_url_route_ts",
-      "target": "url_route_post",
-      "confidence_score": 1.0
+      "target": "url_route_post"
     },
     {
       "relation": "calls",
@@ -1903,9 +1930,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "url_route_post",
-      "target": "url_route_readstore",
-      "confidence_score": 1.0
+      "target": "url_route_readstore"
     },
     {
       "relation": "calls",
@@ -1914,9 +1941,9 @@
       "source_file": "app/api/upload/url/route.ts",
       "source_location": "L105",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "url_route_post",
-      "target": "url_route_writestore",
-      "confidence_score": 1.0
+      "target": "url_route_writestore"
     },
     {
       "relation": "contains",
@@ -2016,16 +2043,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/components/BentoGallery.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "app_components_bentogallery_tsx",
-      "target": "components_bentogallery_placeholder_images"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "app/components/BentoGallery.tsx",
       "source_location": "L31",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2041,6 +2058,16 @@
       "confidence_score": 1.0,
       "source": "app_components_bentogallery_tsx",
       "target": "components_bentogallery_bentogallery"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/components/BentoGallery.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_components_bentogallery_tsx",
+      "target": "components_bentogallery_placeholder_images"
     },
     {
       "relation": "contains",
@@ -2189,6 +2216,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/components/VideoGrid.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_components_videogrid_tsx",
+      "target": "components_videogrid_videogrid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/components/VideoGrid.tsx",
       "source_location": "L15",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2198,12 +2235,12 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "app/components/VideoGrid.tsx",
-      "source_location": "L34",
+      "source_file": "app/components/WhatsAppButton.tsx",
+      "source_location": "L3",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "app_components_videogrid_tsx",
-      "target": "components_videogrid_videogrid"
+      "source": "app_components_whatsappbutton_tsx",
+      "target": "components_whatsappbutton_whatsappbutton"
     },
     {
       "relation": "contains",
@@ -2546,6 +2583,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/dashboard/images/page.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_dashboard_images_page_tsx",
+      "target": "images_page_errormodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/dashboard/images/page.tsx",
       "source_location": "L51",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2571,6 +2618,16 @@
       "confidence_score": 1.0,
       "source": "app_dashboard_videos_page_tsx",
       "target": "videos_page_confirmmodal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/dashboard/videos/page.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "app_dashboard_videos_page_tsx",
+      "target": "videos_page_errormodal"
     },
     {
       "relation": "contains",
@@ -2661,6 +2718,26 @@
       "confidence_score": 1.0,
       "source": "shutterstoryindia_readme_getting_started",
       "target": "shutterstoryindia_readme_codeblock_1"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "patch_css.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "patch_css_js",
+      "target": "shutterstoryindia_patch_css_fs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "patch_css.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "patch_css_js",
+      "target": "shutterstoryindia_patch_css_css"
     },
     {
       "relation": "references",
@@ -2920,5 +2997,5 @@
       "source_file": "public"
     }
   ],
-  "built_at_commit": "ddbca19e62bac953e1589632ab01f9906e226904"
+  "built_at_commit": "6e3c23362d889d2c83de8b19307ff9767077b32d"
 }

@@ -21,23 +21,25 @@ export default function BentoGallery({ items }: Props) {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const cells = gsap.utils.toArray<HTMLElement>(".bento-cell");
-      gsap.fromTo(
-        cells,
-        { opacity: 0, y: 50, scale: 0.96 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: { amount: 1.2, from: "start" },
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        }
-      );
+      if (cells.length > 0) {
+        gsap.fromTo(
+          cells,
+          { opacity: 0, y: 50, scale: 0.96 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: { amount: 1.2, from: "start" },
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+      }
     }, gridRef);
 
     return () => ctx.revert();

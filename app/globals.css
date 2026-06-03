@@ -93,8 +93,10 @@ body {
   overflow-x: hidden;
 }
 
-/* Hide default cursor sitewide; custom cursor JS handles it */
-*, *::before, *::after { cursor: none !important; }
+/* Hide default cursor sitewide on desktop; custom cursor JS handles it */
+@media (min-width: 1024px) {
+  *, *::before, *::after { cursor: none !important; }
+}
 
 /* ─── Scrollbar ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 3px; }
@@ -431,6 +433,8 @@ body::after {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .dash-title {
@@ -614,6 +618,10 @@ body::after {
 }
 
 /* ─── Custom Cursor ───────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  #cursor-dot, #cursor-ring { display: none !important; }
+}
+
 #cursor-dot {
   position: fixed;
   width: 6px;

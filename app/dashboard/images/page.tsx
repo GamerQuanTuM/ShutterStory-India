@@ -172,7 +172,7 @@ export default function ImagesPage() {
               <span style={{ fontSize: "2rem", color: "var(--gold)" }}>+</span>
               <span>{uploading ? "Uploading…" : "Upload Local Image"}</span>
               <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
-                JPG, PNG, WebP · Max 15MB
+                JPG, PNG, WebP · Max 5MB
               </span>
             </label>
             <form onSubmit={handleUrlImport} style={{ display: "flex", gap: "8px" }}>

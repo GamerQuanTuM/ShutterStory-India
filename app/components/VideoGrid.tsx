@@ -21,23 +21,25 @@ export default function VideoGrid({ items }: Props) {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const cellEls = gsap.utils.toArray<HTMLElement>(".video-bento-cell");
-      gsap.fromTo(
-        cellEls,
-        { opacity: 0, y: 60, scale: 0.94 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.9,
-          ease: "power3.out",
-          stagger: { amount: 1.4, from: "start" },
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 85%",
-            once: true,
-          },
-        }
-      );
+      if (cellEls.length > 0) {
+        gsap.fromTo(
+          cellEls,
+          { opacity: 0, y: 60, scale: 0.94 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            stagger: { amount: 1.4, from: "start" },
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+      }
     }, gridRef);
 
     return () => ctx.revert();

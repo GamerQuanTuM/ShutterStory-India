@@ -172,7 +172,7 @@ export default function VideosPage() {
               <span style={{ fontSize: "2rem", color: "var(--gold)" }}>▷</span>
               <span>{uploading ? "Uploading…" : "Upload Local Video"}</span>
               <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
-                MP4, WebM, MOV · Max 200MB
+                MP4, WebM, MOV · Max 25MB
               </span>
             </label>
             <form onSubmit={handleUrlImport} style={{ display: "flex", gap: "8px" }}>
