@@ -7,7 +7,7 @@ const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 const MAX_IMAGES = 16;
 const MAX_VIDEOS = 16;
 const MAX_IMAGE_MB = 5;
-const MAX_VIDEO_MB = 10;
+const MAX_VIDEO_MB = 25;
 
 function readStore() {
   try {

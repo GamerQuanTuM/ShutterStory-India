@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useMedia, MediaItem } from "../../context/MediaContext";
 
 const MAX = 16;
-const MAX_VIDEO_MB = 10;
+const MAX_VIDEO_MB = 25;
 
 function Toast({
   msg,
