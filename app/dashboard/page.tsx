@@ -121,7 +121,7 @@ export default function DashboardPage() {
         >
           {images.slice(0, 6).map((img) => (
             <div key={img.id} className="dash-media-cell">
-              <img src={img.url} alt={img.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={img.url} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           ))}
           {images.length === 0 && (
