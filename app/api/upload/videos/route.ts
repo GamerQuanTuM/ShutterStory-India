@@ -5,7 +5,7 @@ import path from "path";
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "videos");
 const MAX_VIDEOS = 16;
-const MAX_SIZE_MB = 10;
+const MAX_SIZE_MB = 25;
 
 function readStore() {
   try {
