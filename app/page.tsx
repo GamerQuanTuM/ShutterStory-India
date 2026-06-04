@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -48,6 +48,33 @@ const ABOUT_PHOTO =
 
 export default function Home() {
   const { images, videos } = useMedia();
+
+  // Contact form state
+  const [formData, setFormData] = useState({ name: "", email: "", projectType: "", message: "" });
+  const [formStatus, setFormStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [formError, setFormError] = useState("");
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus("sending");
+    setFormError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong.");
+      setFormStatus("success");
+      setFormData({ name: "", email: "", projectType: "", message: "" });
+      setTimeout(() => setFormStatus("idle"), 5000);
+    } catch (err: unknown) {
+      setFormStatus("error");
+      setFormError(err instanceof Error ? err.message : "Something went wrong.");
+      setTimeout(() => setFormStatus("idle"), 5000);
+    }
+  };
 
   // Section refs for scroll animations
   const aboutRef = useRef<HTMLElement>(null);
@@ -311,7 +338,7 @@ export default function Home() {
           <div className="contact-grid">
             <form
               className="contact-form"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleContactSubmit}
             >
               <div className="form-group reveal">
                 <label className="form-label">Your Name</label>
@@ -319,6 +346,9 @@ export default function Home() {
                   type="text"
                   className="form-input"
                   placeholder="Arjun Mehta"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
                 />
               </div>
               <div className="form-group reveal">
@@ -327,12 +357,20 @@ export default function Home() {
                   type="email"
                   className="form-input"
                   placeholder="hello@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
                 />
               </div>
               <div className="form-group reveal">
                 <label className="form-label">Project Type</label>
-                <select className="form-input">
+                <select
+                  className="form-input"
+                  value={formData.projectType}
+                  onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                >
                   <option value="">Select service…</option>
+                  <option>Careers</option>
                   <option>Wedding Photography</option>
                   <option>Cinematic Film</option>
                   <option>Portrait Session</option>
@@ -346,11 +384,24 @@ export default function Home() {
                   rows={5}
                   placeholder="Tell us about your vision…"
                   style={{ resize: "vertical" }}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  required
                 />
               </div>
+              {formStatus === "success" && (
+                <div style={{ padding: "12px 16px", background: "rgba(80,200,120,0.12)", border: "1px solid rgba(80,200,120,0.3)", borderRadius: 8, color: "#4dd68c", fontSize: "0.85rem" }}>
+                  ✓ Your message has been sent! We&apos;ll get back to you shortly.
+                </div>
+              )}
+              {formStatus === "error" && (
+                <div style={{ padding: "12px 16px", background: "rgba(224,112,112,0.12)", border: "1px solid rgba(224,112,112,0.3)", borderRadius: 8, color: "#E07070", fontSize: "0.85rem" }}>
+                  ✗ {formError}
+                </div>
+              )}
               <div className="reveal">
-                <button type="submit" className="btn-primary">
-                  <span>Send Message</span>
+                <button type="submit" className="btn-primary" disabled={formStatus === "sending"}>
+                  <span>{formStatus === "sending" ? "Sending…" : "Send Message"}</span>
                 </button>
               </div>
             </form>

@@ -13,13 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: false,
-  },
-  // Allow large video file uploads via API routes
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "250mb",
-    },
-  },
+  }
 };
 
 export default nextConfig;

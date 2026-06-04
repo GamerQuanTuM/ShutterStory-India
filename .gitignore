@@ -43,3 +43,8 @@ next-env.d.ts
 graphify-out/manifest.json
 graphify-out/cost.json
 graphify-out/cache/
+
+function.md
+
+# Google service account credentials - never commit!
+sheet.json

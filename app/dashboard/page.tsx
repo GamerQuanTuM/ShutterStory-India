@@ -1,15 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useMedia } from "../context/MediaContext";
 
+interface Submission {
+  submittedAt: string;
+  name: string;
+  email: string;
+  projectType: string;
+  message: string;
+}
+
 export default function DashboardPage() {
   const { images, videos } = useMedia();
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/submissions")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data.error) {
+          setSubmissions(data.submissions || []);
+        }
+      })
+      .catch((err) => console.error("Failed to load dashboard submissions:", err))
+      .finally(() => setLoadingSubmissions(false));
+  }, []);
 
   const stats = [
     { label: "Images Uploaded", value: images.length, max: 16, href: "/dashboard/images" },
     { label: "Videos Uploaded", value: videos.length, max: 16, href: "/dashboard/videos" },
     { label: "Storage Used", value: `${Math.round([...images, ...videos].reduce((a, i) => a + i.size, 0) / 1024 / 1024)}`, max: null, unit: "MB", href: null },
+    { label: "Enquiries Received", value: loadingSubmissions ? "..." : submissions.length, max: null, href: "/dashboard/contacts" },
   ];
 
   return (
@@ -203,6 +227,114 @@ export default function DashboardPage() {
             </p>
           )}
         </div>
+      </div>
+
+      {/* Recent Enquiries Preview */}
+      <div style={{ marginTop: 40, marginBottom: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          <h3
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.4rem",
+              fontWeight: 400,
+            }}
+          >
+            Recent Enquiries
+          </h3>
+          <Link
+            href="/dashboard/contacts"
+            style={{
+              fontSize: "0.72rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--gold)",
+            }}
+          >
+            Manage All →
+          </Link>
+        </div>
+
+        {loadingSubmissions && (
+          <div style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
+            Loading enquiries...
+          </div>
+        )}
+
+        {!loadingSubmissions && submissions.length === 0 && (
+          <p style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
+            No enquiries received yet.
+          </p>
+        )}
+
+        {!loadingSubmissions && submissions.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {submissions.slice(0, 3).map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "var(--bg-2)",
+                  border: "1px solid var(--border-2)",
+                  borderRadius: 12,
+                  padding: "16px 20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                  <div>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: "0.95rem", color: "var(--white)" }}>
+                      {s.name}
+                    </span>
+                    <span style={{ marginLeft: 12, fontSize: "0.7rem", color: "var(--gold)", fontVariant: "all-small-caps", letterSpacing: "0.08em" }}>
+                      {s.projectType}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "0.7rem", color: "var(--muted)" }}>{s.submittedAt}</span>
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "var(--muted)" }}>{s.email}</div>
+                <p style={{ fontSize: "0.8rem", color: "var(--text)", lineHeight: 1.6, whiteSpace: "pre-wrap", margin: 0 }}>
+                  {s.message.length > 150 ? s.message.substring(0, 150) + "..." : s.message}
+                </p>
+                <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
+                  <a
+                    href={`mailto:${s.email}?subject=Re: ${s.projectType}&body=Hi ${s.name},%0D%0A%0D%0A`}
+                    className="btn-primary"
+                    style={{
+                      display: "inline-flex",
+                      padding: "8px 16px",
+                      fontSize: "0.68rem",
+                    }}
+                  >
+                    <span>Reply via Email</span>
+                  </a>
+                  <Link
+                    href="/dashboard/contacts"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      fontSize: "0.68rem",
+                      color: "var(--white-dim)",
+                      border: "1px solid var(--border-2)",
+                      padding: "8px 16px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                    }}
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

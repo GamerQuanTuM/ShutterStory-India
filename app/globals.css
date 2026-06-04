@@ -372,8 +372,9 @@ body::after {
 /* ─── Dashboard Styles ────────────────────────────────────────────── */
 .dash-layout {
   display: flex;
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--bg);
+  overflow: hidden;
 }
 
 .dash-sidebar {
@@ -426,6 +427,7 @@ body::after {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  height: 100%;
 }
 
 .dash-header {
@@ -1365,9 +1367,9 @@ body::after {
   .navbar-cta { display: none; }
   .hamburger { display: flex; }
   .footer-grid { grid-template-columns: 1fr; }
-  .dash-layout { flex-direction: column; }
+  .dash-layout { flex-direction: column; height: auto; min-height: 100dvh; overflow: visible; }
   .dash-sidebar { width: 100%; height: auto; position: relative; }
-  .dash-main { padding: 24px; }
+  .dash-main { padding: 24px; overflow-y: visible; }
   .services-grid { grid-template-columns: 1fr; }
 }
 
