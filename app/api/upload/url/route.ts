@@ -2,23 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { instagramGetUrl } from "instagram-url-direct";
+import cloudinary from "../../../../lib/cloudinary";
+import redis from "../../../../lib/redis";
 
-const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 const MAX_IMAGES = 16;
 const MAX_VIDEOS = 16;
 const MAX_IMAGE_MB = 5;
 const MAX_VIDEO_MB = 25;
 
-function readStore() {
+async function readStore() {
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+    const raw = await redis.get("media_store");
+    return raw ? JSON.parse(raw as string) : { images: [], videos: [] };
   } catch {
     return { images: [], videos: [] };
   }
 }
 
-function writeStore(store: object) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2));
+async function writeStore(store: object) {
+  await redis.set("media_store", JSON.stringify(store));
 }
 
 export async function POST(req: NextRequest) {
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid type. Must be image or video" }, { status: 400 });
     }
 
-    const store = readStore();
+    const store = await readStore();
     const items = type === "image" ? (store.images ?? []) : (store.videos ?? []);
     const maxItems = type === "image" ? MAX_IMAGES : MAX_VIDEOS;
 
@@ -60,49 +62,70 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Fetch the raw file
-    const response = await fetch(downloadUrl);
-    if (!response.ok) {
-      return NextResponse.json({ error: "Failed to download media from URL." }, { status: 400 });
-    }
-
-    const buffer = await response.arrayBuffer();
-    const size = buffer.byteLength;
-    const maxMb = type === "image" ? MAX_IMAGE_MB : MAX_VIDEO_MB;
-
-    if (size > maxMb * 1024 * 1024) {
-      return NextResponse.json(
-        { error: `File too large. Maximum ${maxMb}MB allowed for ${type}s.` },
-        { status: 400 }
-      );
-    }
-
-    // Determine extension from content-type or URL
-    const contentType = response.headers.get("content-type") || "";
-    let ext = type === "image" ? "jpg" : "mp4";
-    
-    if (contentType.includes("png")) ext = "png";
-    else if (contentType.includes("webp")) ext = "webp";
-    else if (contentType.includes("gif")) ext = "gif";
-    else if (contentType.includes("webm")) ext = "webm";
-
-    const uploadDir = path.join(process.cwd(), "public", "uploads", type === "image" ? "images" : "videos");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
     const id = `url_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const filename = `${id}.${ext}`;
-    const filePath = path.join(uploadDir, filename);
+    let itemUrl = "";
+    let itemPublicId = "";
+    let finalSize = 0;
+    let finalExt = type === "image" ? "jpg" : "mp4";
 
-    fs.writeFileSync(filePath, Buffer.from(buffer));
+    if (process.env.ASSETS_PROVIDER === "Cloudinary") {
+      try {
+        const uploadResult = await cloudinary.uploader.upload(downloadUrl, {
+          folder: `ShutterStory-India/${type}`,
+          resource_type: type === "image" ? "image" : "video",
+        });
+        itemUrl = uploadResult.secure_url;
+        itemPublicId = uploadResult.public_id;
+        finalSize = uploadResult.bytes;
+        finalExt = uploadResult.format || finalExt;
+      } catch (err) {
+        console.error("Cloudinary upload URL error:", err);
+        return NextResponse.json({ error: "Failed to upload from URL to Cloudinary" }, { status: 500 });
+      }
+    } else {
+      // Fetch the raw file
+      const response = await fetch(downloadUrl);
+      if (!response.ok) {
+        return NextResponse.json({ error: "Failed to download media from URL." }, { status: 400 });
+      }
+
+      const buffer = await response.arrayBuffer();
+      finalSize = buffer.byteLength;
+      const maxMb = type === "image" ? MAX_IMAGE_MB : MAX_VIDEO_MB;
+
+      if (finalSize > maxMb * 1024 * 1024) {
+        return NextResponse.json(
+          { error: `File too large. Maximum ${maxMb}MB allowed for ${type}s.` },
+          { status: 400 }
+        );
+      }
+
+      // Determine extension from content-type or URL
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("png")) finalExt = "png";
+      else if (contentType.includes("webp")) finalExt = "webp";
+      else if (contentType.includes("gif")) finalExt = "gif";
+      else if (contentType.includes("webm")) finalExt = "webm";
+
+      const uploadDir = path.join(process.cwd(), "public", "uploads", type === "image" ? "images" : "videos");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const filename = `${id}.${finalExt}`;
+      const filePath = path.join(uploadDir, filename);
+
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      itemUrl = `/uploads/${type === "image" ? "images" : "videos"}/${filename}`;
+    }
 
     const item = {
       id,
-      filename,
-      url: `/uploads/${type === "image" ? "images" : "videos"}/${filename}`,
+      filename: process.env.ASSETS_PROVIDER === "Cloudinary" ? itemPublicId : `${id}.${finalExt}`,
+      public_id: itemPublicId || undefined,
+      url: itemUrl,
       uploadedAt: new Date().toISOString(),
-      size,
+      size: finalSize,
     };
 
     if (type === "image") {
@@ -111,7 +134,7 @@ export async function POST(req: NextRequest) {
       store.videos = [...items, item];
     }
     
-    writeStore(store);
+    await writeStore(store);
 
     return NextResponse.json({ success: true, item }, { status: 201 });
   } catch (error) {

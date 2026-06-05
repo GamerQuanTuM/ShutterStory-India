@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useMedia, MediaItem } from "../../context/MediaContext";
+import { Loader2 } from "lucide-react";
 
 const MAX = 16;
 const MAX_IMAGE_MB = 5;
@@ -24,9 +25,11 @@ function Toast({
 function ConfirmModal({
   onConfirm,
   onCancel,
+  isDeleting,
 }: {
   onConfirm: () => void;
   onCancel: () => void;
+  isDeleting?: boolean;
 }) {
   return (
     <div className="confirm-modal-backdrop">
@@ -37,10 +40,10 @@ function ConfirmModal({
           public portfolio. This cannot be undone.
         </p>
         <div className="confirm-modal-actions">
-          <button className="btn-danger" onClick={onConfirm}>
-            Delete
+          <button className="btn-danger" onClick={onConfirm} disabled={isDeleting} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {isDeleting ? <><Loader2 className="animate-spin" size={16} /> Deleting...</> : "Delete"}
           </button>
-          <button className="btn-ghost" onClick={onCancel}>
+          <button className="btn-ghost" onClick={onCancel} disabled={isDeleting}>
             Cancel
           </button>
         </div>
@@ -66,6 +69,7 @@ function ErrorModal({ message, onClose }: { message: string; onClose: () => void
 export default function ImagesPage() {
   const { images, uploadImage, uploadFromUrl, deleteImage } = useMedia();
   const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState("");
   const [toastType, setToastType] = useState<"success" | "error" | "">("");
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -117,14 +121,15 @@ export default function ImagesPage() {
   };
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     const ok = await deleteImage(id);
+    setDeletingId(null);
     setConfirmId(null);
     if (ok) showToast("Image deleted.", "success");
     else showToast("Failed to delete. Please try again.", "error");
   };
 
   const isFull = images.length >= MAX;
-
 
   return (
     <>
@@ -161,7 +166,7 @@ export default function ImagesPage() {
         {/* Upload slot (only if not full) */}
         {!isFull && (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <label className={`dash-upload-cell${uploading ? " disabled" : ""}`}>
+            <label className={`dash-upload-cell${uploading ? " disabled" : ""}`} style={{ position: "relative" }}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -169,11 +174,20 @@ export default function ImagesPage() {
                 onChange={handleUpload}
                 disabled={uploading}
               />
-              <span style={{ fontSize: "2rem", color: "var(--gold)" }}>+</span>
-              <span>{uploading ? "Uploading…" : "Upload Local Image"}</span>
-              <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
-                JPG, PNG, WebP · Max 5MB
-              </span>
+              {uploading ? (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                  <Loader2 className="animate-spin" size={32} color="var(--gold)" />
+                  <span>Uploading…</span>
+                </div>
+              ) : (
+                <>
+                  <span style={{ fontSize: "2rem", color: "var(--gold)" }}>+</span>
+                  <span>Upload Local Image</span>
+                  <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
+                    JPG, PNG, WebP · Max 5MB
+                  </span>
+                </>
+              )}
             </label>
             <form onSubmit={handleUrlImport} style={{ display: "flex", gap: "8px" }}>
               <input
@@ -186,8 +200,8 @@ export default function ImagesPage() {
                 required
                 style={{ padding: "8px 12px", fontSize: "0.8rem", flex: 1 }}
               />
-              <button type="submit" className="btn-primary" disabled={uploading} style={{ padding: "8px 16px", fontSize: "0.8rem", height: "auto" }}>
-                <span>{uploading ? "Importing…" : "Import"}</span>
+              <button type="submit" className="btn-primary" disabled={uploading} style={{ padding: "8px 16px", fontSize: "0.8rem", height: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
+                {uploading ? <><Loader2 className="animate-spin" size={14} /> <span>Importing…</span></> : <span>Import</span>}
               </button>
             </form>
           </div>
@@ -195,19 +209,25 @@ export default function ImagesPage() {
 
         {/* Filled slots */}
         {images.map((img: MediaItem) => (
-          <div key={img.id} className="dash-media-cell">
+          <div key={img.id} className="dash-media-cell" style={{ opacity: deletingId === img.id ? 0.5 : 1 }}>
             <img
               src={img.url}
               alt={`Photo ${images.indexOf(img) + 1}`}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
+            {deletingId === img.id && (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.5)" }}>
+                <Loader2 className="animate-spin" size={32} color="#fff" />
+              </div>
+            )}
             <div className="dash-media-cell-actions">
               <button
                 className="btn-danger"
-                style={{ padding: "8px 14px", fontSize: "0.7rem" }}
+                style={{ padding: "8px 14px", fontSize: "0.7rem", display: "flex", alignItems: "center", gap: "4px" }}
                 onClick={() => setConfirmId(img.id)}
+                disabled={deletingId === img.id}
               >
-                Delete
+                {deletingId === img.id ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
@@ -227,6 +247,7 @@ export default function ImagesPage() {
         <ConfirmModal
           onConfirm={() => handleDelete(confirmId)}
           onCancel={() => setConfirmId(null)}
+          isDeleting={deletingId === confirmId}
         />
       )}
 

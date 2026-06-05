@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useMedia, MediaItem } from "../../context/MediaContext";
+import { Loader2 } from "lucide-react";
 
 const MAX = 16;
 const MAX_VIDEO_MB = 25;
@@ -24,9 +25,11 @@ function Toast({
 function ConfirmModal({
   onConfirm,
   onCancel,
+  isDeleting,
 }: {
   onConfirm: () => void;
   onCancel: () => void;
+  isDeleting?: boolean;
 }) {
   return (
     <div className="confirm-modal-backdrop">
@@ -37,10 +40,10 @@ function ConfirmModal({
           public portfolio. This cannot be undone.
         </p>
         <div className="confirm-modal-actions">
-          <button className="btn-danger" onClick={onConfirm}>
-            Delete
+          <button className="btn-danger" onClick={onConfirm} disabled={isDeleting} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {isDeleting ? <><Loader2 className="animate-spin" size={16} /> Deleting...</> : "Delete"}
           </button>
-          <button className="btn-ghost" onClick={onCancel}>
+          <button className="btn-ghost" onClick={onCancel} disabled={isDeleting}>
             Cancel
           </button>
         </div>
@@ -66,6 +69,7 @@ function ErrorModal({ message, onClose }: { message: string; onClose: () => void
 export default function VideosPage() {
   const { videos, uploadVideo, uploadFromUrl, deleteVideo } = useMedia();
   const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMsg, setToastMsg] = useState("");
   const [toastType, setToastType] = useState<"success" | "error" | "">("");
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -118,7 +122,9 @@ export default function VideosPage() {
   };
 
   const handleDelete = async (id: string) => {
+    setDeletingId(id);
     const ok = await deleteVideo(id);
+    setDeletingId(null);
     setConfirmId(null);
     if (ok) showToast("Video deleted.", "success");
     else showToast("Failed to delete. Please try again.", "error");
@@ -161,7 +167,7 @@ export default function VideosPage() {
         {/* Upload slot */}
         {!isFull && (
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <label className={`dash-upload-cell${uploading ? " disabled" : ""}`}>
+            <label className={`dash-upload-cell${uploading ? " disabled" : ""}`} style={{ position: "relative" }}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -169,13 +175,22 @@ export default function VideosPage() {
                 onChange={handleUpload}
                 disabled={uploading}
               />
-              <span style={{ fontSize: "2rem", color: "var(--gold)" }}>▷</span>
-              <span>{uploading ? "Uploading…" : "Upload Local Video"}</span>
-              <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
-                MP4, WebM, MOV · Max 25MB
-              </span>
+              {uploading ? (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                  <Loader2 className="animate-spin" size={32} color="var(--gold)" />
+                  <span>Uploading…</span>
+                </div>
+              ) : (
+                <>
+                  <span style={{ fontSize: "2rem", color: "var(--gold)" }}>▷</span>
+                  <span>Upload Local Video</span>
+                  <span style={{ fontSize: "0.62rem", color: "var(--muted)" }}>
+                    MP4, WebM, MOV · Max 25MB
+                  </span>
+                </>
+              )}
             </label>
-            <form onSubmit={handleUrlImport} style={{ display: "flex", gap: "8px" }}>
+            <form onSubmit={handleUrlImport as any} style={{ display: "flex", gap: "8px" }}>
               <input
                 type="url"
                 className="form-input"
@@ -186,8 +201,8 @@ export default function VideosPage() {
                 required
                 style={{ padding: "8px 12px", fontSize: "0.8rem", flex: 1 }}
               />
-              <button type="submit" className="btn-primary" disabled={uploading} style={{ padding: "8px 16px", fontSize: "0.8rem", height: "auto" }}>
-                <span>{uploading ? "Importing…" : "Import"}</span>
+              <button type="submit" className="btn-primary" disabled={uploading} style={{ padding: "8px 16px", fontSize: "0.8rem", height: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
+                {uploading ? <><Loader2 className="animate-spin" size={14} /> <span>Importing…</span></> : <span>Import</span>}
               </button>
             </form>
           </div>
@@ -198,11 +213,14 @@ export default function VideosPage() {
           <div
             key={vid.id}
             className="dash-media-cell"
+            style={{ opacity: deletingId === vid.id ? 0.5 : 1 }}
             onMouseEnter={(e) => {
+              if (deletingId === vid.id) return;
               const v = e.currentTarget.querySelector("video");
               if (v) v.play().catch(() => { });
             }}
             onMouseLeave={(e) => {
+              if (deletingId === vid.id) return;
               const v = e.currentTarget.querySelector("video");
               if (v) { v.pause(); v.currentTime = 0; }
             }}
@@ -213,6 +231,11 @@ export default function VideosPage() {
               playsInline
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
+            {deletingId === vid.id && (
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.5)", zIndex: 10 }}>
+                <Loader2 className="animate-spin" size={32} color="#fff" />
+              </div>
+            )}
             {/* Play icon */}
             <div
               style={{
@@ -237,15 +260,17 @@ export default function VideosPage() {
                 className="btn-primary"
                 style={{ padding: "8px 14px", fontSize: "0.7rem" }}
                 onClick={() => setPreviewVideo(vid.url)}
+                disabled={deletingId === vid.id}
               >
                 <span>Preview</span>
               </button>
               <button
                 className="btn-danger"
-                style={{ padding: "8px 14px", fontSize: "0.7rem" }}
+                style={{ padding: "8px 14px", fontSize: "0.7rem", display: "flex", alignItems: "center", gap: "4px" }}
                 onClick={() => setConfirmId(vid.id)}
+                disabled={deletingId === vid.id}
               >
-                Delete
+                {deletingId === vid.id ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
@@ -294,6 +319,7 @@ export default function VideosPage() {
         <ConfirmModal
           onConfirm={() => handleDelete(confirmId)}
           onCancel={() => setConfirmId(null)}
+          isDeleting={deletingId === confirmId}
         />
       )}
 

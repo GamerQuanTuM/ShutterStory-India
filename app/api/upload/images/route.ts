@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import cloudinary from "../../../../lib/cloudinary";
+import redis from "../../../../lib/redis";
 
-const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "images");
 const MAX_IMAGES = 16;
 const MAX_SIZE_MB = 5;
 
-function readStore() {
+async function readStore() {
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+    const raw = await redis.get("media_store");
+    return raw ? JSON.parse(raw as string) : { images: [], videos: [] };
   } catch {
     return { images: [], videos: [] };
   }
 }
 
-function writeStore(store: object) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2));
+async function writeStore(store: object) {
+  await redis.set("media_store", JSON.stringify(store));
 }
 
 export async function POST(req: NextRequest) {
@@ -44,7 +46,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const store = readStore();
+  const store = await readStore();
   const images: object[] = store.images ?? [];
 
   if (images.length >= MAX_IMAGES) {
@@ -54,31 +56,60 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Ensure upload directory exists
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  }
-
-  // Generate unique filename
-  const ext = file.name.split(".").pop() ?? "jpg";
   const id = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  const filename = `${id}.${ext}`;
-  const filePath = path.join(UPLOAD_DIR, filename);
-
-  // Write file
   const bytes = await file.arrayBuffer();
-  fs.writeFileSync(filePath, Buffer.from(bytes));
+  const buffer = Buffer.from(bytes);
+
+  let itemUrl = "";
+  let itemPublicId = "";
+  let finalSize = file.size;
+
+  if (process.env.ASSETS_PROVIDER === "Cloudinary") {
+    try {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "ShutterStory-India/image",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(buffer);
+      });
+
+      const result = uploadResult as any;
+      itemUrl = result.secure_url;
+      itemPublicId = result.public_id;
+      finalSize = result.bytes;
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      return NextResponse.json({ error: "Failed to upload to Cloudinary" }, { status: 500 });
+    }
+  } else {
+    if (!fs.existsSync(UPLOAD_DIR)) {
+      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    }
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const filename = `${id}.${ext}`;
+    const filePath = path.join(UPLOAD_DIR, filename);
+    fs.writeFileSync(filePath, buffer);
+    itemUrl = `/uploads/images/${filename}`;
+  }
 
   const item = {
     id,
-    filename,
-    url: `/uploads/images/${filename}`,
+    filename: process.env.ASSETS_PROVIDER === "Cloudinary" ? itemPublicId : file.name,
+    public_id: itemPublicId || undefined,
+    url: itemUrl,
     uploadedAt: new Date().toISOString(),
-    size: file.size,
+    size: finalSize,
   };
 
   store.images = [...images, item];
-  writeStore(store);
+  await writeStore(store);
 
   return NextResponse.json({ success: true, item }, { status: 201 });
 }

@@ -4,36 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useMedia } from "../context/MediaContext";
 
-interface Submission {
-  submittedAt: string;
-  name: string;
-  email: string;
-  projectType: string;
-  message: string;
-}
-
 export default function DashboardPage() {
-  const { images, videos } = useMedia();
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loadingSubmissions, setLoadingSubmissions] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/submissions")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!data.error) {
-          setSubmissions(data.submissions || []);
-        }
-      })
-      .catch((err) => console.error("Failed to load dashboard submissions:", err))
-      .finally(() => setLoadingSubmissions(false));
-  }, []);
+  const { images, videos, submissions } = useMedia();
 
   const stats = [
     { label: "Images Uploaded", value: images.length, max: 16, href: "/dashboard/images" },
     { label: "Videos Uploaded", value: videos.length, max: 16, href: "/dashboard/videos" },
     { label: "Storage Used", value: `${Math.round([...images, ...videos].reduce((a, i) => a + i.size, 0) / 1024 / 1024)}`, max: null, unit: "MB", href: null },
-    { label: "Enquiries Received", value: loadingSubmissions ? "..." : submissions.length, max: null, href: "/dashboard/contacts" },
+    { label: "Enquiries Received", value: submissions.length, max: null, href: "/dashboard/contacts" },
   ];
 
   return (
@@ -261,19 +239,13 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {loadingSubmissions && (
-          <div style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
-            Loading enquiries...
-          </div>
-        )}
-
-        {!loadingSubmissions && submissions.length === 0 && (
+        {submissions.length === 0 && (
           <p style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
             No enquiries received yet.
           </p>
         )}
 
-        {!loadingSubmissions && submissions.length > 0 && (
+        {submissions.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {submissions.slice(0, 3).map((s, i) => (
               <div

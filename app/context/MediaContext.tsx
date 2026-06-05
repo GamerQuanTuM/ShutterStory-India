@@ -21,9 +21,18 @@ export interface MediaStore {
   videos: MediaItem[];
 }
 
+export interface Submission {
+  submittedAt: string;
+  name: string;
+  email: string;
+  projectType: string;
+  message: string;
+}
+
 interface MediaContextType {
   images: MediaItem[];
   videos: MediaItem[];
+  submissions: Submission[];
   loading: boolean;
   refresh: () => Promise<void>;
   uploadImage: (file: File) => Promise<string | null>;
@@ -38,15 +47,24 @@ const MediaContext = createContext<MediaContextType | null>(null);
 export function MediaProvider({ children }: { children: React.ReactNode }) {
   const [images, setImages] = useState<MediaItem[]>([]);
   const [videos, setVideos] = useState<MediaItem[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch("/api/media");
-      if (res.ok) {
-        const data: MediaStore = await res.json();
+      const [mediaRes, subRes] = await Promise.all([
+        fetch("/api/media").catch(() => null),
+        fetch("/api/submissions").catch(() => null)
+      ]);
+
+      if (mediaRes && mediaRes.ok) {
+        const data: MediaStore = await mediaRes.json();
         setImages(data.images ?? []);
         setVideos(data.videos ?? []);
+      }
+      if (subRes && subRes.ok) {
+        const data = await subRes.json();
+        setSubmissions(data.submissions ?? []);
       }
     } catch {
       /* silent */
@@ -126,6 +144,7 @@ export function MediaProvider({ children }: { children: React.ReactNode }) {
       value={{
         images,
         videos,
+        submissions,
         loading,
         refresh,
         uploadImage,

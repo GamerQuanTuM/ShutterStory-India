@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import cloudinary from "../../../../lib/cloudinary";
+import redis from "../../../../lib/redis";
 
-const DATA_FILE = path.join(process.cwd(), "data", "media.json");
-
-function readStore() {
+async function readStore() {
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+    const raw = await redis.get("media_store");
+    return raw ? JSON.parse(raw as string) : { images: [], videos: [] };
   } catch {
     return { images: [], videos: [] };
   }
 }
 
-function writeStore(store: object) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2));
+async function writeStore(store: object) {
+  await redis.set("media_store", JSON.stringify(store));
 }
 
 export async function DELETE(req: NextRequest) {
@@ -24,31 +25,47 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "id and type are required" }, { status: 400 });
   }
 
-  const store = readStore();
+  const store = await readStore();
 
   if (type === "image") {
-    const item = store.images?.find((i: { id: string }) => i.id === id);
+    const item = store.images?.find((i: { id: string, public_id?: string, filename: string }) => i.id === id);
     if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    // Remove physical file
-    const filePath = path.join(process.cwd(), "public", "uploads", "images", item.filename);
-    try { fs.unlinkSync(filePath); } catch { /* may already be deleted */ }
+    if (process.env.ASSETS_PROVIDER === "Cloudinary" && item.public_id) {
+      try {
+        await cloudinary.uploader.destroy(item.public_id, { resource_type: "image" });
+      } catch (err) {
+        console.error("Cloudinary delete error:", err);
+      }
+    } else {
+      // Remove physical file
+      const filePath = path.join(process.cwd(), "public", "uploads", "images", item.filename);
+      try { fs.unlinkSync(filePath); } catch { /* may already be deleted */ }
+    }
 
     store.images = store.images.filter((i: { id: string }) => i.id !== id);
-    writeStore(store);
+    await writeStore(store);
     return NextResponse.json({ success: true });
   }
 
   if (type === "video") {
-    const item = store.videos?.find((i: { id: string }) => i.id === id);
+    const item = store.videos?.find((i: { id: string, public_id?: string, filename: string }) => i.id === id);
     if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    // Remove physical file
-    const filePath = path.join(process.cwd(), "public", "uploads", "videos", item.filename);
-    try { fs.unlinkSync(filePath); } catch { /* may already be deleted */ }
+    if (process.env.ASSETS_PROVIDER === "Cloudinary" && item.public_id) {
+      try {
+        await cloudinary.uploader.destroy(item.public_id, { resource_type: "video" });
+      } catch (err) {
+        console.error("Cloudinary delete error:", err);
+      }
+    } else {
+      // Remove physical file
+      const filePath = path.join(process.cwd(), "public", "uploads", "videos", item.filename);
+      try { fs.unlinkSync(filePath); } catch { /* may already be deleted */ }
+    }
 
     store.videos = store.videos.filter((i: { id: string }) => i.id !== id);
-    writeStore(store);
+    await writeStore(store);
     return NextResponse.json({ success: true });
   }
 

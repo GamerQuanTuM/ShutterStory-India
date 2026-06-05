@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "media.json");
-
-function readStore() {
-  try {
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return { images: [], videos: [] };
-  }
-}
+import redis from "../../../lib/redis";
 
 export async function GET() {
-  const store = readStore();
-  return NextResponse.json(store);
+  try {
+    const raw = await redis.get("media_store");
+    const store = raw ? JSON.parse(raw as string) : { images: [], videos: [] };
+    return NextResponse.json(store);
+  } catch (e) {
+    console.error("Redis error:", e);
+    return NextResponse.json({ images: [], videos: [] });
+  }
 }

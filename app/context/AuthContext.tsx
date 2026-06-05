@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   isLoggedIn: boolean;
+  isInitialized: boolean;
   login: (email: string, password: string) => boolean;
   logout: () => void;
 }
@@ -16,10 +17,12 @@ const AUTH_KEY = "ssi_auth";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem(AUTH_KEY);
     if (stored === "1") setIsLoggedIn(true);
+    setIsInitialized(true);
   }, []);
 
   const login = (email: string, password: string): boolean => {
@@ -40,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isInitialized, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

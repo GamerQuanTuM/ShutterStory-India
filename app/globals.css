@@ -1443,3 +1443,16 @@ body::after {
   width: 0%;
   transition: width 0.1s linear;
 }
+
+/* ─── Skeleton Loader ─────────────────────────────────────────────── */
+@keyframes skeleton-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+.skeleton {
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+  background: var(--border-2);
+  border-radius: var(--radius-lg);
+}
